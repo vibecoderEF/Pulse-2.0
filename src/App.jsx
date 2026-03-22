@@ -17,9 +17,10 @@ class ErrorBoundary extends Component {
             style={{background:"#c8f135",color:"#0d0d0d",border:"none",borderRadius:12,padding:"12px 28px",fontWeight:700,fontSize:"0.92rem",cursor:"pointer"}}>
             Reload app
           </button>
-          {this.state.error&&<details style={{marginTop:24,fontSize:"0.7rem",color:"#444",maxWidth:"100%"}}>
-            <summary style={{cursor:"pointer",color:"#606060"}}>Error details</summary>
-            <pre style={{marginTop:8,overflow:"auto",maxHeight:120,fontSize:"0.65rem"}}>{this.state.error?.message}</pre>
+          {this.state.error&&<details style={{marginTop:24,fontSize:"0.7rem",color:"#a0a0a0",maxWidth:"100%"}}>
+            <summary style={{cursor:"pointer",color:"#c8f135",fontSize:"0.78rem"}}>Error details</summary>
+            <pre style={{marginTop:8,overflow:"auto",maxHeight:120,fontSize:"0.65rem",color:"#a0a0a0",
+              background:"#1a1a1a",padding:"8px",borderRadius:6,whiteSpace:"pre-wrap",wordBreak:"break-all"}}>{this.state.error?.message}</pre>
           </details>}
         </div>
       );
@@ -377,11 +378,11 @@ async function callClaude(systemPrompt, userPrompt, maxTokens=400) {
         "anthropic-dangerous-direct-browser-access":"true",
       },
       body:JSON.stringify({
-        model:"claude-haiku-4-5-20251001",
+        // Use sonnet for vision-capable requests (photos), haiku for text-only
+        model: Array.isArray(userPrompt) ? "claude-sonnet-4-20250514" : "claude-haiku-4-5-20251001",
         max_tokens:maxTokens,
         system:systemPrompt,
-        // Pass array directly for image messages, string for text-only
-        messages:[{role:"user", content: Array.isArray(userPrompt) ? userPrompt : userPrompt}],
+        messages:[{role:"user", content: userPrompt}],
       }),
     });
     if (!res.ok) {
@@ -2509,11 +2510,11 @@ class NutritionBoundary extends Component {
   render() {
     if (this.state.err) return (
       <div style={{padding:"32px 20px",textAlign:"center",
-        background:"var(--paper)",borderRadius:16,margin:"16px 0",
-        border:"1px solid var(--line)"}}>
+        background:"#1a1a1a",borderRadius:16,margin:"16px 0",
+        border:"1px solid #2e2e2e"}}>
         <div style={{fontSize:"1.5rem",marginBottom:12}}>🥗</div>
-        <div style={{fontWeight:700,color:"var(--ink)",marginBottom:6,fontSize:"0.96rem"}}>Nutrition tab had a hiccup</div>
-        <div style={{fontSize:"0.82rem",color:"var(--ink-mid)",marginBottom:16}}>Your data is safe.</div>
+        <div style={{fontWeight:700,color:"#f5f5f5",marginBottom:6,fontSize:"0.96rem"}}>Nutrition tab had a hiccup</div>
+        <div style={{fontSize:"0.82rem",color:"#a0a0a0",marginBottom:16}}>Your data is safe.</div>
         <button onClick={()=>this.setState({err:false})}
           style={{background:"#c8f135",color:"#0d0d0d",border:"none",borderRadius:10,
             padding:"10px 24px",fontWeight:700,cursor:"pointer",fontSize:"0.9rem"}}>
